@@ -136,7 +136,7 @@ public class CheckoutQueueManager : MonoBehaviour {
             // Only redirect customers who are still in the checkout queue
             GAgent agent = customer.GetComponent<GAgent>();
             if (agent != null && agent.currentAction is CustomerCheckout) continue;
-            if (agent != null && agent.currentAction is CustomerGoHome) continue;
+            //if (agent != null && agent.currentAction is CustomerGoHome) continue;
 
             UnityEngine.AI.NavMeshAgent navAgent = customer.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (navAgent != null && navAgent.isActiveAndEnabled)

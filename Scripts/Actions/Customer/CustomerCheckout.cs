@@ -20,31 +20,47 @@ public class CustomerCheckout : GAction
         customer = GetComponent<Customer>();
         if (customer == null) return false;
 
-        // Only checkout if first in line
         GoToCheckout goToCheckout = GetComponent<GoToCheckout>();
-        if (goToCheckout != null)
-        {
-            CheckoutQueueManager queue = goToCheckout.GetAssignedQueue();
-            if (queue != null)
-            {
-                if (!queue.IsFirstInLine(gameObject))
-                {
-                    return false;
-                }
-                target = queue.gameObject;
-            }
-            else
-            {
-                target = gameObject;
-            }
-        }
-        else
+        if (goToCheckout == null)
         {
             target = gameObject;
+            duration = baseCheckoutTime + (customer.ItemsInCart * timePerItem);
+            return true;
         }
 
-        duration = baseCheckoutTime + (customer.ItemsInCart * timePerItem);
-        return true;
+        CheckoutQueueManager queue = goToCheckout.GetAssignedQueue();
+        if (queue == null)
+        {
+            target = gameObject;
+            duration = baseCheckoutTime + (customer.ItemsInCart * timePerItem);
+            return true;
+        }
+
+        // If first in line, proceed with checkout
+        if (queue.IsFirstInLine(gameObject))
+        {
+            target = queue.gameObject;
+            duration = baseCheckoutTime + (customer.ItemsInCart * timePerItem);
+            return true;
+        }
+
+        // Not first — check if we should switch lanes
+        if (queue.QueueLength > goToCheckout.maxQueueLength)
+        {
+            // Leave current queue and re-evaluate
+            queue.LeaveQueue(gameObject);
+            SparkWorld.Instance.GetQueue("customersInCheckoutQueue").RemoveResource(gameObject);
+            beliefs.RemoveState("inCheckoutQueue");
+            return false;
+        }
+
+        // Stay in current queue, update position
+        UnityEngine.AI.NavMeshAgent navAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (navAgent != null)
+        {
+            navAgent.SetDestination(queue.GetCurrentPosition(gameObject));
+        }
+        return false;
     }
 
     public override bool PostPerform()
@@ -57,6 +73,9 @@ public class CustomerCheckout : GAction
             if (queue != null)
             {
                 queue.LeaveQueue(gameObject);
+                // Stop the customer so they don't drift
+                UnityEngine.AI.NavMeshAgent navAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+                if (navAgent != null) navAgent.ResetPath();
             }
         }
 
