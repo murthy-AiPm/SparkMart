@@ -141,7 +141,7 @@ public class GAgent : MonoBehaviour
                     currentAction.running = true;
                     destination = currentAction.target.transform.position;
 
-                    bool stayInPlace = currentAction is PickUpItem;
+                    bool stayInPlace = currentAction is PickUpItem || currentAction is CustomerCheckout;
 
                     if (stayInPlace)
                     {

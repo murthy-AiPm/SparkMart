@@ -32,7 +32,7 @@ public class GoToCheckout : GAction
         }
 
         target = bestLane;
-        assignedQueue = bestLane.GetComponent<CheckoutQueueManager>();
+     //   assignedQueue = bestLane.GetComponent<CheckoutQueueManager>();
 
         // Track this customer in the checkout queue
         SparkWorld.Instance.GetQueue("customersInCheckoutQueue").AddResource(gameObject);
