@@ -26,9 +26,9 @@ MonoBehaviour:
   requiresCart: 0
   prefersSelfCheckout: 1
   browsesBehavior: 0
-  basePatience: 60
-  impatienceMultiplier: 1
-  startingSatisfaction: 70
+  basePatience: 70
+  impatienceMultiplier: 2.435
+  startingSatisfaction: 100
   fightChance: 0
   stealChance: 0
   spillChance: 0.01

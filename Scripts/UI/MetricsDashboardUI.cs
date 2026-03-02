@@ -11,6 +11,7 @@ public class MetricsDashboardUI : MonoBehaviour {
     [Header("Metric Displays")]
     public TextMeshProUGUI customersServedText;
     public TextMeshProUGUI profitText;
+    public TextMeshProUGUI totalItemText;
     public TextMeshProUGUI satisfactionText;
     public TextMeshProUGUI securityRatingText;
 
@@ -74,7 +75,10 @@ public class MetricsDashboardUI : MonoBehaviour {
         if (metricsManager == null) return;
 
         if (customersServedText != null)
-            customersServedText.text = $"Customers: {metricsManager.TotalCustomersServed}";
+            customersServedText.text = $"Customers Served: {metricsManager.TotalCustomersServed}";
+
+        if (totalItemText != null)
+            totalItemText.text = $"Items Sold: {metricsManager.TotalItemsSold}";
 
         if (profitText != null)
             profitText.text = $"Profit: ${metricsManager.TotalProfit:F2}";
